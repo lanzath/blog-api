@@ -21,7 +21,7 @@ public class PostMap : IEntityTypeConfiguration<Post>
             .HasColumnName("LastUpdateDate")
             .HasColumnType("SMALLDATETIME")
             .HasMaxLength(60)
-            .HasDefaultValue(DateTime.Now.ToUniversalTime());
+            .HasDefaultValueSql("GETDATE()");
 
         builder
             .HasIndex(x => x.Slug, "IX_Post_Slug")
