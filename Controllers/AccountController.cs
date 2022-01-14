@@ -16,6 +16,6 @@ namespace Blog.Controllers;
     {
         var token = _tokenService.GenerateToken(null);
 
-        return Ok(token);
+        return Ok(token.ToString());
     }
 }
