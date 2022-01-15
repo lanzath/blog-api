@@ -40,6 +40,10 @@ Responsáveis por definir as ações de cada `Endpoint`.
 
 Configuração do `DataContext` e **mapeamento** de `models` com definições sobre as tabelas e suas respectivas colunas para a geração correta das `migrations`
 
+##### Extensions
+
+São métodos de extensão que adicionamos a outras classes, são sempre estáticos e devemos no parâmetro informar a qual classe queremos adicionálos com o `this`
+
 ##### Migrations
 
 Arquivos responsável por gerar, atualizar e versionar o banco de dados.
