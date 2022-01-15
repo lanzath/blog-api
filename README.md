@@ -29,3 +29,29 @@ builder.Services.AddScoped<CustomService>();
 ```cs
 builder.Services.AddSingleton<CustomService>();
 ```
+
+## Estrutura do projeto
+
+##### Controllers
+
+Responsáveis por definir as ações de cada `Endpoint`.
+
+##### Data
+
+Configuração do `DataContext` e **mapeamento** de `models` com definições sobre as tabelas e suas respectivas colunas para a geração correta das `migrations`
+
+##### Migrations
+
+Arquivos responsável por gerar, atualizar e versionar o banco de dados.
+
+##### Models
+
+São as entidades que representam o banco de dados, possuem propriedades e métodos de regra de negócio.
+
+##### Services
+
+Configuração de serviços utilizados pela aplicação e regras de negócio.
+
+##### View Models
+
+São responsáveis por representar apenas o conteúdo necessário dos dados que vem pela requisição.
