@@ -5,6 +5,7 @@ using Blog.ViewModels;
 using Blog.ViewModels.Categories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Blog.Controllers;
 
@@ -13,11 +14,19 @@ namespace Blog.Controllers;
 public class CategoryController : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> Get([FromServices] BlogDataContext context)
+    public async Task<IActionResult> Get(
+        [FromServices] IMemoryCache cache,
+        [FromServices] BlogDataContext context)
     {
         try
         {
-            var categories = await context.Categories.AsNoTracking().ToListAsync();
+            // Se não houver em memória o registro, será criado.
+            var categories = cache.GetOrCreate("CategoriesCache", entry =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1); // Memória em cache irá durar por 1 hora.
+                return GetCategories(context);
+            });
+            //var categories = await context.Categories.AsNoTracking().ToListAsync();
             return Ok(new ResultViewModel<List<Category>>(categories));
 
         }
@@ -25,6 +34,11 @@ public class CategoryController : ControllerBase
         {
             return StatusCode(500, new ResultViewModel<List<Category>>("Falha interna no servidor"));
         }
+    }
+
+    public List<Category> GetCategories(BlogDataContext context)
+    {
+        return context.Categories.ToList();
     }
 
     [HttpGet("{id:int}")]

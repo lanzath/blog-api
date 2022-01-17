@@ -2,8 +2,11 @@ using Blog;
 using Blog.Data;
 using Blog.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.IdentityModel.Tokens;
+using System.IO.Compression;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +21,7 @@ LoadConfiguration(app);
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseStaticFiles();
+app.UseResponseCompression();
 app.MapControllers();
 app.Run();
 
@@ -54,12 +58,30 @@ void ConfigureAuthentication(WebApplicationBuilder builder)
 
 void ConfigureMvc(WebApplicationBuilder builder)
 {
+    // Utilização de memória em Cache
+    builder.Services.AddMemoryCache();
+
+    // Configuração de compressão de resposta.
+    builder.Services.AddResponseCompression(options =>
+    {
+        options.Providers.Add<GzipCompressionProvider>();
+    });
+    builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+    {
+        options.Level = CompressionLevel.Optimal;
+    });
+
     builder
         .Services
         .AddControllers()
         .ConfigureApiBehaviorOptions(options =>
         {
             options.SuppressModelStateInvalidFilter = true; // Desabilita validação automática com ModelState
+        })
+        .AddJsonOptions(x =>
+        {
+            x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles; // Permite carregar os relacionamentos na serialização do json.
+            x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault; // Quando houver objeto nulo, não é incluído no json.
         });
 }
 
