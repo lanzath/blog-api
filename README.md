@@ -59,3 +59,11 @@ Configuração de serviços utilizados pela aplicação e regras de negócio.
 ##### View Models
 
 São responsáveis por representar apenas o conteúdo necessário dos dados que vem pela requisição.
+
+##### wwwroot
+É para onde os arquivos estáticos são enviados, como uploads de imagens.
+
+Para aceitar arquivos estáticos deve ser adicionado ao `program.cs`
+`app.UseStaticFiles();`.
+
+As imagens foram upadas aqui para fins didáticos, não é uma boa prática armazenar arquivos na API, deve ser utilizado um serviço de storage como por exemplo o **Azure Storage** ou **AWS S3**
