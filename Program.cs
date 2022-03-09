@@ -9,6 +9,11 @@ using System.Text;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(MyAllowSpecificOrigins, builder => builder.WithOrigins("*"));
+});
 
 ConfigureAuthentication(builder);
 ConfigureMvc(builder);
@@ -23,6 +28,8 @@ app.UseAuthorization();
 app.UseStaticFiles();
 app.UseResponseCompression();
 app.MapControllers();
+
+app.UseCors();
 app.Run();
 
 void LoadConfiguration(WebApplication app)

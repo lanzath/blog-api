@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Blog.Controllers;
 
 [ApiController]
-[Authorize]
+// [Authorize]
 [Route("api/v1/posts")]
 public class PostController : ControllerBase
 {
